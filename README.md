@@ -1,6 +1,6 @@
-## MineShop 核心依赖包
+## MineTenant 核心依赖包
 
 ### 安装
 ``` shell
-composer require yangxmo/mine-shop-core
+composer require yangxmo/mine-tenant-core
 ```
