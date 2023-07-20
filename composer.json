@@ -6,7 +6,7 @@
         "php",
         "mineadmin core"
     ],
-    "minimum-stability": "dev-master",
+    "minimum-stability": "dev",
     "description": "mineadmin core package",
     "autoload": {
         "psr-4": {
