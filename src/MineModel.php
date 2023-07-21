@@ -14,8 +14,8 @@ namespace Mine;
 
 use Hyperf\DbConnection\Model\Model;
 use Hyperf\ModelCache\Cacheable;
+use Mine\Kernel\Tenant\Tenant;
 use Mine\Traits\ModelMacroTrait;
-use Mine\Traits\TenantDbTrait;
 
 /**
  * Class MineModel
@@ -23,7 +23,7 @@ use Mine\Traits\TenantDbTrait;
  */
 class MineModel extends Model
 {
-    use Cacheable, ModelMacroTrait, TenantDbTrait;
+    use Cacheable, ModelMacroTrait;
 
     /**
      * 隐藏的字段列表
@@ -54,6 +54,7 @@ class MineModel extends Model
         $this->registerBase();
         //注册用户数据权限方法
         $this->registerUserDataScope();
+        $this->connection = Tenant::instance()->getId();
     }
 
     /**
