@@ -22,6 +22,14 @@ class RedisDriver extends Driver implements KeyCollectorInterface
         $this->redis = $container->get(RedisFactory::class)->get($config['pool_name']);
     }
 
+    protected function getCacheKey(string $key): string
+    {
+        $tenantId = Tenant::instance()->getId();
+        $this->prefix = $this->prefix ?? \Hyperf\Config\config('redis.default.prefix');
+
+        return ($this->prefix . trim($tenantId, ':') . ':' . $key);
+    }
+
     public function get($key, $default = null): mixed
     {
         $res = $this->redis->get($this->getCacheKey($key));
