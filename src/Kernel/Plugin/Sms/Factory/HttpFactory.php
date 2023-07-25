@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 namespace Mine\Kernel\Plugin\Sms\Factory;
 
-use App\System\Kernel\Plugin\Sms\Handler\HttpHandler;
+use Mine\Kernel\Plugin\Sms\Handler\HttpHandler;
 use Hyperf\Contract\ConfigInterface;
 use Psr\Container\ContainerInterface;
 

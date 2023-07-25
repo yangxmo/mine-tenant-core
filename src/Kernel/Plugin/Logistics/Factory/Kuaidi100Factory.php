@@ -11,7 +11,7 @@ declare(strict_types=1);
  */
 namespace Mine\Kernel\Plugin\Logistics\Factory;
 
-use App\System\Kernel\Plugin\Logistics\Handler\Kuaidi100Handler;
+use Mine\Kernel\Plugin\Logistics\Handler\Kuaidi100Handler;
 use Hyperf\Contract\ConfigInterface;
 use Psr\Container\ContainerInterface;
 
