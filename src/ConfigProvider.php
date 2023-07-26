@@ -46,7 +46,7 @@ class ConfigProvider
                     Hyperf\ClassMap\Crooutine::class => __DIR__ . '/Kernel/ClassMap/Coroutine.php',
                     Hyperf\ClassMap\ResolverDispatcher::class => __DIR__ . '/Kernel/ClassMap/ResolverDispatcher.php',
                     Hyperf\Redis\Redis::class => __DIR__ . '/Kernel/Redis/Redis.php',
-                    Hyperf\Database\Migrations::class => __DIR__ . '/Kernel/ClassMap/Migration.php.php',
+                    Hyperf\Database\Migrations::class => __DIR__ . '/Kernel/ClassMap/Migration.php',
                 ]
             ],
             // 默认 Command 的定义，合并到 Hyperf\Contract\ConfigInterface 内，换个方式理解也就是与 config/autoload/commands.php 对应
