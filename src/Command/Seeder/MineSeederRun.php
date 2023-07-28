@@ -17,6 +17,7 @@ use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Concerns\Confirmable;
 use Hyperf\Database\Commands\Seeders\BaseCommand;
 use Hyperf\Database\Seeders\Seed;
+use Mine\Kernel\Tenant\Tenant;
 use Mine\Mapper\TenantMapper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -96,6 +97,8 @@ class MineSeederRun extends BaseCommand
 
     protected function exec(string $poolName = 'default')
     {
+        Tenant::instance()->init($poolName);
+
         $this->seed->setOutput($this->output);
 
         $this->seed->setConnection($poolName);

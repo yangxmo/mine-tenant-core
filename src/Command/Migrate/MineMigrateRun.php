@@ -16,6 +16,7 @@ namespace Mine\Command\Migrate;
 use Hyperf\Command\ConfirmableTrait;
 use Hyperf\Database\Commands\Migrations\BaseCommand;
 use Hyperf\Database\Migrations\Migrator;
+use Mine\Kernel\Tenant\Tenant;
 use Mine\Mapper\TenantMapper;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -94,6 +95,8 @@ class MineMigrateRun extends BaseCommand
 
     protected function exec(string $poolName = 'default'): void
     {
+        Tenant::instance()->init($poolName);
+
         $this->prepareDatabase($poolName);
 
         // Next, we will check to see if a path option has been defined. If it has
