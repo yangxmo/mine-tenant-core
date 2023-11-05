@@ -8,16 +8,16 @@ class Tenant
 {
     use StaticInstance;
 
-    public string $tenantId = 'center';
+    public string $tenantId = '';
 
     /**
      * @param string|null $tenantId
      * @return void
      */
-    public function init(string $tenantId = null): void
+    public function setTenantId(string $tenantId = null): void
     {
         if (is_null($tenantId)) {
-            $tenantId = context_get('tenant_id');
+            $tenantId = context_get('tenant_id', 'default');
         }
 
         $this->tenantId = $tenantId;

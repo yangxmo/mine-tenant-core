@@ -73,10 +73,10 @@ class UpdateProjectCommand extends MineCommand
         $modules = make(Mine::class)->getModuleInfo();
         $basePath = BASE_PATH . '/app/';
 
-        $tenant = $this->input->getArgument('tenant');
+        $isInit = $this->input->getArgument('init');
 
-        if ($tenant) {
-            $this->exec($modules, $basePath, $tenant);
+        if ($isInit) {
+            $this->exec($modules, $basePath);
         } else {
             // 获取所有租户ID
             $tenantList = $this->tenantMapper->getListForCursor(['select' => ['tenant_id']]);
@@ -113,7 +113,7 @@ class UpdateProjectCommand extends MineCommand
     protected function getArguments(): array
     {
         return [
-            ['tenant', InputArgument::OPTIONAL, 'The run seeder class of the init', ''],
+            ['init', InputArgument::OPTIONAL, 'The run seeder class of the init', false],
         ];
     }
 }

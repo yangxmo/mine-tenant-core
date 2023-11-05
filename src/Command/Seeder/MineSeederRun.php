@@ -17,7 +17,6 @@ use Hyperf\Command\Annotation\Command;
 use Hyperf\Command\Concerns\Confirmable;
 use Hyperf\Database\Commands\Seeders\BaseCommand;
 use Hyperf\Database\Seeders\Seed;
-use Mine\Kernel\Tenant\Tenant;
 use Mine\Mapper\TenantMapper;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
@@ -80,25 +79,23 @@ class MineSeederRun extends BaseCommand
         }
 
         $this->module = ucfirst(trim($this->input->getArgument('name')));
-        $tenant = $this->input->getArgument('tenant');
+        $isInit = $this->input->getArgument('init');
 
-        if ($tenant) {
-            //执行指定租户
-            $this->exec($tenant);
+        if ($isInit) {
+            $this->exec();
         } else {
             // 获取所有租户ID
-            $tenantList = $this->tenantMapper->getListForCursor(['select' => ['corp_code']]);
+            $tenantList = $this->tenantMapper->getListForCursor(['select' => ['tenant_id']]);
             // 执行
+            $this->exec('tourist');
             foreach ($tenantList as $tenant) {
-                $this->exec($tenant->tenant_id);
+                // $this->exec($tenant->tenant_id);
             }
         }
     }
 
     protected function exec(string $poolName = 'default')
     {
-        Tenant::instance()->init($poolName);
-
         $this->seed->setOutput($this->output);
 
         $this->seed->setConnection($poolName);
@@ -110,7 +107,7 @@ class MineSeederRun extends BaseCommand
     {
         return [
             ['name', InputArgument::REQUIRED, 'The run seeder class of the name'],
-            ['tenant', InputArgument::OPTIONAL, 'The run seeder class of the init', ''],
+            ['init', InputArgument::OPTIONAL, 'The run seeder class of the init', false],
         ];
     }
 

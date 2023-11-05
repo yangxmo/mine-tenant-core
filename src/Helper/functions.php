@@ -9,9 +9,7 @@
  * @Link   https://gitee.com/xmo/MineAdmin
  */
 
-use App\System\Service\SystemQueueLogService;
-use Mine\Vo\AmqpQueueVo;
-use Mine\Vo\QueueMessageVo;
+use App\System\Vo\QueueMessageVo;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\Logger\LoggerFactory;
 use Hyperf\Redis\RedisProxy;
@@ -20,139 +18,17 @@ use Mine\Helper\LoginUser;
 use Mine\Helper\AppVerify;
 use Mine\Helper\Id;
 use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\ContainerInterface;
 use Psr\Container\NotFoundExceptionInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Log\LoggerInterface;
-use Mine\Kernel\Tenant\Tenant;
-use Hyperf\AsyncQueue\Driver\DriverFactory;
-use Hyperf\AsyncQueue\JobInterface;
-use Hyperf\ExceptionHandler\Formatter\FormatterInterface;
-
-if (! function_exists('dd')) {
-    /**
-     * 获取环境变量信息.
-     *
-     * @param mixed ...$data
-     * @return mixed
-     */
-    function dd($data)
-    {
-        print_r($data);
-        exit;
-    }
-}
-
-if (! function_exists('env')) {
-    /**
-     * 获取环境变量信息.
-     */
-    function env(string $key, mixed $default = null): mixed
-    {
-        return \Hyperf\Support\env($key, $default);
-    }
-}
-
-if (! function_exists('config')) {
-    /**
-     * 获取配置信息.
-     */
-    function config(string $key, mixed $default = null): mixed
-    {
-        return \Hyperf\Config\config($key, $default);
-    }
-}
-
-if (! function_exists('make')) {
-    /**
-     * Create an object instance, if the DI container exist in ApplicationContext,
-     * then the object will be created by DI container via `make()` method, if not,
-     * the object will create by `new` keyword.
-     */
-    function make(string $name, array $parameters = [])
-    {
-        return \Hyperf\Support\make($name, $parameters);
-    }
-}
-
-if (! function_exists('di')) {
-    /**
-     * Finds an entry of the container by its identifier and returns it.
-     * @return mixed|ContainerInterface
-     */
-    function di(?string $id = null)
-    {
-        $container = ApplicationContext::getContainer();
-        if ($id) {
-            return $container->get($id);
-        }
-
-        return $container;
-    }
-}
-
-if (! function_exists('format_throwable')) {
-    /**
-     * Format a throwable to string.
-     */
-    function format_throwable(Throwable $throwable): string
-    {
-        return di()->get(FormatterInterface::class)->format($throwable);
-    }
-}
-
-if (! function_exists('queue_push')) {
-    /**
-     * Push a job to async queue.
-     */
-    function queue_push(JobInterface $job, int $delay = 0, string $key = 'default'): bool
-    {
-        $driver = di()->get(DriverFactory::class)->get($key);
-        return $driver->push($job, $delay);
-    }
-}
-
-if (! function_exists('go')) {
-    function go(callable $callable): void
-    {
-        $id = Tenant::instance()->getId();
-
-        \Swoole\Coroutine::create(function () use ($id, $callable) {
-            Tenant::instance()->init($id);
-            \Hyperf\Support\call($callable);
-        });
-    }
-}
-
-if (! function_exists('shortMd5')) {
-    /**
-     * 返回16位md5值
-     */
-    function shortMd5(): string
-    {
-        return substr(md5(uniqid(strval(mt_rand()), true)), 8, 16);
-    }
-}
-
-if (! function_exists('getContainerRedisHandle')) {
-    /**
-     * 返回16位md5值
-     * @return \Hyperf\Redis\RedisProxy
-     */
-    function getContainerRedisHandle(string $pool = 'default'): Hyperf\Redis\RedisProxy
-    {
-        return ApplicationContext::getContainer()->get(\Hyperf\Redis\RedisFactory::class)->get($pool);
-    }
-}
-
 
 if (! function_exists('container')) {
 
     /**
      * 获取容器实例
-     * @return ContainerInterface
+     * @return \Psr\Container\ContainerInterface
      */
-    function container(): ContainerInterface
+    function container(): \Psr\Container\ContainerInterface
     {
         return ApplicationContext::getContainer();
     }
@@ -343,7 +219,7 @@ if (! function_exists('push_queue_message')) {
     function push_queue_message(QueueMessageVo $message, array $receiveUsers = []): bool
     {
         return container()
-            ->get(SystemQueueLogService::class)
+            ->get(\App\System\Service\SystemQueueLogService::class)
             ->pushMessage($message, $receiveUsers);
     }
 }
@@ -351,16 +227,16 @@ if (! function_exists('push_queue_message')) {
 if (! function_exists('add_queue')) {
     /**
      * 添加任务到队列
-     * @param AmqpQueueVo $amqpQueueVo
+     * @param \App\System\Vo\AmqpQueueVo $amqpQueueVo
      * @return bool
      * @throws Throwable
      * @throws ContainerExceptionInterface
      * @throws NotFoundExceptionInterface
      */
-    function add_queue(AmqpQueueVo $amqpQueueVo): bool
+    function add_queue(\App\System\Vo\AmqpQueueVo $amqpQueueVo): bool
     {
         return container()
-            ->get(SystemQueueLogService::class)
+            ->get(\App\System\Service\SystemQueueLogService::class)
             ->addQueue($amqpQueueVo);
     }
 }

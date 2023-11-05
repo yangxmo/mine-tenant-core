@@ -18,11 +18,8 @@ declare(strict_types=1);
 
 namespace Mine;
 
-use Hyperf\JsonRpc\JsonRpcHttpTransporter;
-use Mine\Kernel\Plugin\Logistics\Construct\LogisticsKuaidi100Construct;
-use Mine\Kernel\Plugin\Logistics\Factory\Kuaidi100Factory;
-use Mine\Kernel\Plugin\Sms\Construct\SmsHttpConstruct;
-use Mine\Kernel\Plugin\Sms\Factory\HttpFactory;
+use Mine\Kernel\Db\ConnectionResolver;
+use Mine\Middlewares\TenantMiddleware;
 
 class ConfigProvider
 {
@@ -31,9 +28,12 @@ class ConfigProvider
         return [
             // 合并到  config/autoload/dependencies.php 文件
             'dependencies' => [
-                SmsHttpConstruct::class => HttpFactory::class,
-                LogisticsKuaidi100Construct::class => Kuaidi100Factory::class,
-                JsonRpcHttpTransporter::class => Kernel\Rpc\JsonRpcHttpTransporter::class
+                \Hyperf\Database\ConnectionResolverInterface::class => ConnectionResolver::class
+            ],
+            'middlewares' => [
+                'http' => [
+                    TenantMiddleware::class
+                ]
             ],
             // 合并到  config/autoload/annotations.php 文件
             'annotations' => [
@@ -46,7 +46,7 @@ class ConfigProvider
                     Hyperf\ClassMap\Crooutine::class => __DIR__ . '/Kernel/ClassMap/Coroutine.php',
                     Hyperf\ClassMap\ResolverDispatcher::class => __DIR__ . '/Kernel/ClassMap/ResolverDispatcher.php',
                     Hyperf\Redis\Redis::class => __DIR__ . '/Kernel/Redis/Redis.php',
-                    Hyperf\Database\Migrations::class => __DIR__ . '/Kernel/ClassMap/Migration.php',
+                    Hyperf\Database\Migrations::class => __DIR__ . '/Kernel/ClassMap/Migration.php.php',
                 ]
             ],
             // 默认 Command 的定义，合并到 Hyperf\Contract\ConfigInterface 内，换个方式理解也就是与 config/autoload/commands.php 对应

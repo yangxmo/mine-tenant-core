@@ -49,7 +49,7 @@ class MineCache extends \Mine\Abstracts\AbstractRedis
      */
     public function setUploadCache(string $key, mixed $params): void
     {
-        $key = $this->getKey( $key);
+        $key = $this->getKey('upload:' . $key);
         $this->redis()->set($key, $params);
     }
 
@@ -60,7 +60,7 @@ class MineCache extends \Mine\Abstracts\AbstractRedis
      */
     public function getUploadCache(string $key): mixed
     {
-        $key = $this->getKey( $key);
+        $key = $this->getKey('upload:' . $key);
         return $this->redis()->get($key);
     }
 

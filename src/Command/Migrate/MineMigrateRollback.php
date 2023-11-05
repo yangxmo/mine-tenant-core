@@ -15,7 +15,6 @@ namespace Mine\Command\Migrate;
 use Hyperf\Command\Concerns\Confirmable;
 use Hyperf\Database\Commands\Migrations\BaseCommand;
 use Hyperf\Database\Migrations\Migrator;
-use Mine\Kernel\Tenant\Tenant;
 use Mine\Mapper\TenantMapper;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Input\InputArgument;
@@ -76,14 +75,13 @@ class MineMigrateRollback extends BaseCommand
         }
 
         $this->module = trim($this->input->getArgument('name'));
-        $tenant = $this->input->getArgument('tenant');
+        $isInit = $this->input->getArgument('init');
 
-        if ($tenant) {
-            //执行指定租户
-            $this->exec($tenant);
+        if ($isInit) {
+            $this->exec();
         } else {
             // 获取所有租户ID
-            $tenantList = $this->tenantMapper->getListForCursor(['select' => ['corp_code']]);
+            $tenantList = $this->tenantMapper->getListForCursor(['select' => ['tenant_id']]);
 
             // 执行
             foreach ( $tenantList as $tenant) {
@@ -94,8 +92,6 @@ class MineMigrateRollback extends BaseCommand
 
     protected function exec (string $poolName = 'default'): void
     {
-        Tenant::instance()->init($poolName);
-
         $this->prepareDatabase($poolName);
 
         // Next, we will check to see if a path option has been defined. If it has
@@ -140,7 +136,7 @@ class MineMigrateRollback extends BaseCommand
     {
         return [
             ['name', InputArgument::REQUIRED, 'Please enter the module to be run'],
-            ['tenant', InputArgument::OPTIONAL, 'Please enter the init to be init', ''],
+            ['init', InputArgument::OPTIONAL, 'Please enter the init to be init', false],
         ];
     }
 

@@ -285,6 +285,17 @@ trait MapperTrait
     }
 
     /**
+     * 新增数据
+     * @param array $data
+     * @return MineModel|Model
+     */
+    public function create(array $data): MineModel|Model
+    {
+        $this->filterExecuteAttributes($data, $this->getModel()->incrementing);
+        return $this->model::create($data);
+    }
+
+    /**
      * 读取一条数据
      * @param int $id
      * @param array $column
@@ -493,12 +504,11 @@ trait MapperTrait
      * 闭包通用方式统计
      * @param \Closure|null $closure
      * @param string $column
-     * @param array $group
      * @return int
      */
-    public function count(?\Closure $closure = null, string $column = '*', array $group = []): int
+    public function count(?\Closure $closure = null, string $column = '*'): int
     {
-        return $this->settingClosure($closure)->groupBy($group)->count($column);
+        return $this->settingClosure($closure)->count($column);
     }
 
     /**

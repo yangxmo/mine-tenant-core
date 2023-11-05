@@ -1,63 +1,43 @@
 <?php
+/**
+ * MineAdmin is committed to providing solutions for quickly building web applications
+ * Please view the LICENSE file that was distributed with this source code,
+ * For the full copyright and license information.
+ * Thank you very much for using MineAdmin.
+ *
+ * @Author X.Mo<root@imoi.cn>
+ * @Link   https://gitee.com/xmo/MineAdmin
+ */
 
 declare(strict_types=1);
-/**
- * This file is part of Hyperf.
- *
- * @link     https://www.hyperf.io
- * @document https://hyperf.wiki
- * @contact  group@hyperf.io
- * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
- */
 namespace Mine\Middlewares;
 
+use Mine\Exception\MineException;
 use Mine\Kernel\Tenant\Tenant;
-use Exception;
-use Hyperf\Context\Context;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
-class TenantMiddleware implements MiddlewareInterface
+class TenantMiddleware  implements MiddlewareInterface
 {
     /**
-     * @throws ContainerExceptionInterface
-     * @throws NotFoundExceptionInterface
+     * @param ServerRequestInterface $request
+     * @param RequestHandlerInterface $handler
+     * @return ResponseInterface
+     * @throws \Psr\Container\ContainerExceptionInterface
+     * @throws \Psr\Container\NotFoundExceptionInterface
      */
     public function process(ServerRequestInterface $request, RequestHandlerInterface $handler): ResponseInterface
     {
-        $corpId = $request->getHeaderLine('TenantId') ?? null;
-
-        if ($request->getMethod() == 'OPTIONS') {
-            return $handler->handle($request);
+        // 检查租户
+        if (!$request->hasHeader('X-Tenant-Id') || empty($tenantId = $request->getHeaderLine('X-Tenant-Id'))) {
+            throw new MineException(t('mineadmin.tenant_notfound'));
         }
-        try {
-            // 获取配置中心的所有企业
-            $tenantNoArr = \Hyperf\Config\config('corp_no');
 
-            // 判定是否所有企业中有没有当前这个企业
-            if (empty($corpId) || ! in_array($corpId, $tenantNoArr)) {
-                return container()->get(\Hyperf\HttpServer\Contract\ResponseInterface::class)->json([
-                    'success' => false,
-                    'message' => t('tenant.corp_notfound'),
-                    'code' => 200,
-                    'data' => [],
-                ]);
-            }
-            Context::set('tenant_id', $corpId);
+        Tenant::instance()->setTenantId($tenantId);
 
-            Tenant::instance()->init($corpId);
-        } catch (Exception $e) {
-            return container()->get(\Hyperf\HttpServer\Contract\ResponseInterface::class)->json([
-                'success' => false,
-                'message' => $e->getMessage(),
-                'code' => 200,
-                'data' => [],
-            ]);
-        }
+        context_set('tenant_id', $tenantId);
 
         return $handler->handle($request);
     }
