@@ -43,8 +43,8 @@ class ConfigProvider
                     ],
                 ],
                 'class_map' => [
-                    Hyperf\ClassMap\Crooutine::class => __DIR__ . '/Kernel/ClassMap/Coroutine.php',
-                    Hyperf\ClassMap\ResolverDispatcher::class => __DIR__ . '/Kernel/ClassMap/ResolverDispatcher.php',
+                    Hyperf\Crooutine\Crooutine::class => __DIR__ . '/Kernel/ClassMap/Coroutine.php',
+                    Hyperf\Di\ResolverDispatcher::class => __DIR__ . '/Kernel/ClassMap/ResolverDispatcher.php',
                     Hyperf\Redis\Redis::class => __DIR__ . '/Kernel/Redis/Redis.php',
                     Hyperf\Database\Migrations::class => __DIR__ . '/Kernel/ClassMap/Migration.php.php',
                 ]

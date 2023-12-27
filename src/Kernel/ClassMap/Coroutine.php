@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-namespace Hyperf\ClassMap;
+namespace Hyperf\Coroutine;
 
 use App\System\Kernel\Context\Coroutine as Go;
 use Hyperf\Engine\Coroutine as Co;

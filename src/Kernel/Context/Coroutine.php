@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-namespace App\System\Kernel\Context;
+namespace Hyperf\Coroutine;
 
 use App\System\Kernel\Log\AppendRequestIdProcessor;
 use Hyperf\Context\Context;

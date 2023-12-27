@@ -9,7 +9,7 @@ declare(strict_types=1);
  * @contact  group@hyperf.io
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
-namespace App\System\Kernel\Event;
+namespace Hyperf\Event;
 
 use Hyperf\Event\EventDispatcher;
 use Psr\Container\ContainerInterface;
